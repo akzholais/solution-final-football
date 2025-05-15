@@ -1,6 +1,8 @@
 package Game;
 
-class Ball extends Circly{
+import java.util.ArrayList;
+
+public class Ball extends Circly{
     double slow=8.0/0.008;
     double slowX=0;
     double slowY=0;
@@ -11,8 +13,8 @@ class Ball extends Circly{
     static int lbg;
 
     Ball(){
-        xPos=Main.width/2;
-        yPos=Main.height/2;
+        xPos= Game.Main.width/2;
+        yPos= Game.Main.height/2;
         radius=8;
         size=16;
     }
@@ -53,8 +55,8 @@ class Ball extends Circly{
         }else xPos+=getXSpeed();
 
         moveAngle=Math.atan2(ySpeed, xSpeed);
-        slowX=slow*Main.delta*Math.abs(Math.cos(moveAngle));
-        slowY=slow*Main.delta*Math.abs(Math.sin(moveAngle));
+        slowX=slow* Game.Main.delta*Math.abs(Math.cos(moveAngle));
+        slowY=slow* Game.Main.delta*Math.abs(Math.sin(moveAngle));
 
         if(xSpeed>=slowX) xSpeed-=slowX;
         else if(xSpeed<=-slowX) xSpeed+=slowX;
@@ -65,10 +67,23 @@ class Ball extends Circly{
     }
 
     double getYSpeed(){
-        return ySpeed*Main.delta;
+        return ySpeed* Game.Main.delta;
     }
 
     double getXSpeed(){
-        return xSpeed*Main.delta;
+        return xSpeed* Game.Main.delta;
     }
+
+    private final ArrayList<BallObserver> observers = new ArrayList<>();
+    public void addObserver(BallObserver o) {
+        observers.add(o);
+    }
+    void notifyGoalScored(String team) {
+        for (BallObserver o : observers) {
+            o.onGoalScored(team);
+        }
+    }
+
+
+
 }
