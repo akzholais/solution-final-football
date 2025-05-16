@@ -16,7 +16,6 @@ class Player extends Circly{
     double i=0;
     double j=0;
     boolean botted;
-    Ai bot;
     private final boolean leftT;
     int goalsize=160;
     ArrayList<Direk> direkler=new ArrayList<>();
@@ -33,6 +32,7 @@ class Player extends Circly{
     }
 
     void move(){
+        //keylisten
         if(Main.pressed.contains(up)&&!Main.pressed.contains(down))
             if(j>-(125-Player.increment*Main.delta)) j-=Player.increment*Main.delta;
             else j=-125;
@@ -48,6 +48,7 @@ class Player extends Circly{
             else i=125;
 
 
+        //set player speed
         xSpeed=SPEED*Math.sin(i*Math.PI/250)*Math.cos(j*Math.PI/500)*Main.delta;
         ySpeed=SPEED*Math.sin(j*Math.PI/250)*Math.cos(i*Math.PI/500)*Main.delta;
 
@@ -95,6 +96,7 @@ class Player extends Circly{
                 if(Main.distance(this,Main.ball)>radius+Main.ball.radius)xPos+=xSpeed;
             }
         }
+        //slow player
         if(i>decrement*Main.delta) i-=decrement*Main.delta;
         else if(i<-decrement*Main.delta) i+=decrement*Main.delta;
         else i=0;
