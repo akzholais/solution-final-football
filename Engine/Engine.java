@@ -11,12 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
-
+import states.*;
 
 public abstract class Engine extends JPanel implements KeyListener, ActionListener, ItemListener{
     protected static boolean run=true;
     public static Engine engine;
     public final static Set<Integer> pressed=new TreeSet<>();
+    private Image backgroundImage;
 
     public static int width=1200;
     public static int height=800;
@@ -49,7 +50,7 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
 
     private JMenuBar menuBar;
     protected JMenu menu1;
-    private JMenuItem m11;
+    protected JMenuItem m11;
     private JMenuItem m21;
     private ArrayList<JMenuItem> resolutionObjs=new ArrayList<>();
     private JMenuItem m2s1;
@@ -87,6 +88,12 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         JPanel contPane=new JPanel(new BorderLayout());
         System.out.println(frame.getGraphicsConfiguration().getBufferCapabilities().isPageFlipping());
 
+        try {
+            backgroundImage = new ImageIcon("src/assets/foot.jpg").getImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         frame.pack();
         topInset=frame.getInsets().top+frame.getInsets().bottom;
@@ -105,8 +112,7 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         scaleX=width/firstW;
         scaleY=height/firstH;
 
-
-        frame.setJMenuBar(menuBarimiz());
+        menuBar = new JMenuBar();
         frame.setContentPane(contPane);
         menuBar.setVisible(false);
 
@@ -125,6 +131,8 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
     private static double scaleX(){
         return engine.scaleX;
     }
+
+
 
     public void initialize(){
         res=resolutionObjs.get(0).getText().split("\\*");
@@ -196,23 +204,39 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         System.out.println("saved configs");
     }
 
-    public void paintComponent(Graphics g){
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(showStats){
-            g.drawString("FPS: "+fps+"    UPS:"+ups, 5, 10);
+
+        if (backgroundImage != null) {
+            double scaleFactor = 0.9;
+
+            int imgWidth = (int) (backgroundImage.getWidth(this) * scaleFactor);
+            int imgHeight = (int) (backgroundImage.getHeight(this) * scaleFactor);
+
+            int x = (getWidth() - imgWidth) / 2;
+            int y = (getHeight() - imgHeight) / 2;
+
+            g.drawImage(backgroundImage, x, y, imgWidth, imgHeight, this);
+
         }
-        for(Text t : texts) t.render(g);
+
+        if (showStats) {
+            g.drawString("FPS: " + fps + "    UPS:" + ups, 5, 10);
+        }
+
+        for (Text t : texts) t.render(g);
     }
+
+
 
     public void keyTyped(KeyEvent e){}
 
     public void run(){
         initialize();
 
-
         frame.add(this);
         frame.setVisible(true);
-
 
         new TimedEvent(500){
             @Override
@@ -322,7 +346,7 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         }else actions(e);
     }
 
-    private JMenuBar menuBarimiz(){
+    protected  JMenuBar menuBarimiz(){
         menuBar=new JMenuBar();
         menu1=new JMenu("Game");
         JMenu menu2=new JMenu("Engine");

@@ -2,6 +2,8 @@ package Game;
 
 import Engine.Engine;
 import Engine.TimedEvent;
+import commands.*;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Main extends Engine {
     static Player[] players;
@@ -30,7 +35,7 @@ public class Main extends Engine {
     static boolean goal = true;
     static byte t1Score = 0;
     static byte t2Score = 0;
-    private JMenuItem m12;//reset
+    private JMenuItem m12;
     private JMenuItem m13;
     private JMenuItem m14;
     private JMenuItem m15;
@@ -44,7 +49,6 @@ public class Main extends Engine {
 
     static ArrayList<Mutator> mutators = new ArrayList<>();
     static ArrayList<Mutator> mutatorsToRemove = new ArrayList<>();
-
 
     private Main() {
         super();
@@ -114,6 +118,9 @@ public class Main extends Engine {
         super.initialize();
         reset();
         for (String s : variables) System.out.println(s);
+
+        frame.setJMenuBar(menuBarimiz());
+
         new TimedEvent(13000) {
             @Override
             public void run() {
@@ -124,6 +131,7 @@ public class Main extends Engine {
             }
         }.start();
     }
+
 
     public void gameCodes() {
         for (Direk d : Direk.direkler) {
@@ -154,6 +162,24 @@ public class Main extends Engine {
         }
 
         ball.move();
+        if (ball.yPos + ball.radius + ball.getYSpeed() >= 780 && ball.ySpeed > 0) {
+            botBound.triggerHighlight();
+        }
+        if (ball.yPos - ball.radius + ball.getYSpeed() <= 30 && ball.ySpeed < 0) {
+            topBound.triggerHighlight();
+        }
+
+        if (ball.xPos + ball.radius + ball.getXSpeed() >= 1145 &&
+                !(ball.yPos >= Ball.rtg && ball.yPos <= Ball.rbg) && ball.xSpeed > 0) {
+            rightBound1.triggerHighlight();
+            rightBound2.triggerHighlight();
+        }
+        if (ball.xPos - ball.radius + ball.getXSpeed() <= 70 &&
+                !(ball.yPos >= Ball.ltg && ball.yPos <= Ball.lbg) && ball.xSpeed < 0) {
+            leftBound1.triggerHighlight();
+            leftBound2.triggerHighlight();
+        }
+
 
         if (ball.xPos >= 1150 && goal) {
             ball.notifyGoalScored("Player1");
@@ -174,7 +200,7 @@ public class Main extends Engine {
             mutators.remove(m);
         }
     }
-
+    private final Map<JMenuItem, Command> commandMap = new HashMap<>();
 
     public void menuBar() {
         m12 = new JMenuItem("Player 1 name");
@@ -189,21 +215,20 @@ public class Main extends Engine {
         m15 = new JMenuItem("Player 2 color");
         m15.addActionListener(this);
         menu1.add(m15);
-        m16 = new JMenuItem("Send bot to:");
-        m16.addActionListener(this);
-        menu1.add(m16);
-        m17 = new JMenuItem("Send bot1 to random location");
-        m17.addActionListener(this);
-        menu1.add(m17);
-        m18 = new JMenuItem("Bot1 hit the ball");
-        m18.addActionListener(this);
-        menu1.add(m18);
         m19 = new JMenuItem("Set player1 goalsize:");
         m19.addActionListener(this);
         menu1.add(m19);
         m110 = new JMenuItem("Set player2 goalsize:");
         m110.addActionListener(this);
         menu1.add(m110);
+        m11 = new JMenuItem("Reset");
+        m11.addActionListener(this);
+        menu1.add(m11);
+
+
+        commandMap.put(m12, new ChangeNameCommand(player1, frame, "Enter Player 1 name:"));
+        commandMap.put(m13, new ChangeNameCommand(player2, frame, "Enter Player 2 name:"));
+        commandMap.put(m11, new ResetCommand(this));
     }
 
     protected void actions(ActionEvent e) {
@@ -372,5 +397,8 @@ public class Main extends Engine {
                 reset();
             }
         }.start();
+
+
     }
+
 }

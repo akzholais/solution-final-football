@@ -12,3 +12,4 @@ public class MutatorFactory {
         return new Mutator(type);
     }
 }
+
