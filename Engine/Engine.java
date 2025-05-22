@@ -56,9 +56,6 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
     private JMenuItem m2s1;
     private JMenuItem m2s2;
     private JMenuItem m2s3;
-    private JMenuItem m2f1;
-    private JMenuItem m2f2;
-    private JMenuItem m2f3;
 
     protected boolean showStats=true;
     public static Random rng=new Random();
@@ -337,12 +334,6 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
             setUps(64);
         }else if(e.getSource()==m2s3){
             setUps(52);
-        }else if(e.getSource()==m2f1){
-            setFps(128);
-        }else if(e.getSource()==m2f2){
-            setFps(64);
-        }else if(e.getSource()==m2f3){
-            setFps(52);
         }else actions(e);
     }
 
@@ -355,17 +346,11 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         m2s1=new JMenuItem("128Hz");
         m2s2=new JMenuItem("64Hz");
         m2s3=new JMenuItem("50Hz");
-        m2f1=new JMenuItem("128");
-        m2f2=new JMenuItem("64");
-        m2f3=new JMenuItem("50");
         m21.addActionListener(this);
         m11.addActionListener(this);
         m2s1.addActionListener(this);
         m2s2.addActionListener(this);
         m2s3.addActionListener(this);
-        m2f1.addActionListener(this);
-        m2f2.addActionListener(this);
-        m2f3.addActionListener(this);
         menu1.add(m11);
         menu2.add(m21);
         menu2.addSeparator();
@@ -379,10 +364,6 @@ public abstract class Engine extends JPanel implements KeyListener, ActionListen
         menu2.add(m2s1);
         menu2.add(m2s2);
         menu2.add(m2s3);
-        menu2.add("FPS:");
-        menu2.add(m2f1);
-        menu2.add(m2f2);
-        menu2.add(m2f3);
         menuBar.add(menu1);
         menuBar.add(menu2);
         menuBar();

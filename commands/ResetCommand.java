@@ -14,3 +14,4 @@ public class ResetCommand implements Command {
         game.reset();
     }
 }
+

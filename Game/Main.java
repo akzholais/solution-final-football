@@ -221,9 +221,7 @@ public class Main extends Engine {
         m110 = new JMenuItem("Set player2 goalsize:");
         m110.addActionListener(this);
         menu1.add(m110);
-        m11 = new JMenuItem("Reset");
-        m11.addActionListener(this);
-        menu1.add(m11);
+
 
 
         commandMap.put(m12, new ChangeNameCommand(player1, frame, "Enter Player 1 name:"));
